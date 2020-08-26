@@ -1,2 +1,13 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/game">
+        <file>icons/pause.png</file>
+        <file>icons/play.png</file>
+        <file>icons/resume.png</file>
+        <file>icons/restart.png</file>
+        <file>icons/exit.png</file>
+    </qresource>
+    <qresource prefix="/save">
+        <file>icons/loadfile.png</file>
+        <file>icons/save.png</file>
+    </qresource>
+</RCC>
