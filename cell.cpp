@@ -7,6 +7,19 @@ Cell::Cell(int s, QPoint pos, QWidget *parent)
 {
     setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     setMaximumSize(30,30);
+    connect(this,SIGNAL(clicked()),this,SLOT(handleClick()));
+    setFocusPolicy(Qt::NoFocus);
+}
+
+void Cell::handleClick()
+{
+    if(m_status == blank){
+        m_status = block;
+        update();
+    } else if(m_status == block) {
+        m_status = blank;
+        update();
+    }
 }
 
 /*

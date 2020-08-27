@@ -22,11 +22,13 @@ signals:
 public slots:
     void SnakeMoved(QPoint preH,QPoint tryH);
     void SnakeRetracted(QPoint);
-    void ExtractBoardStatus();
-
+    //void ExtractBoardStatus();
+    void flush();
+    void genApple();
+    void setCellsDisable(bool);
 
 private:
-    void genApple();
+
     QGridLayout *layout;
     Cell *cells[40][40];
 };

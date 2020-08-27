@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "board.h"
 #include "snake.h"
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -14,7 +15,6 @@ QT_END_NAMESPACE
 class GameWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_PROPERTY(int mainStatus)
 
 public:
     GameWindow(QWidget *parent = nullptr);
@@ -23,16 +23,29 @@ public:
 public slots:
 
     void gameStatusChange(int);
+
     void playStep();
+    void playStart();
+    void playPause();
+    void playRestart();
+    void playEnd();
+
+    void snakeGrow();
+
+    void saveGame();
+    //void loadGame();
 
 signals:
     void actionTriggered(int);
     void direcInput(int);
+    void snakeMove();
+    void snakeRetract();
 
 private:
     Ui::GameWindow *ui;
 
     void keyPressEvent(QKeyEvent *ev) override;
+    bool eventFilter(QObject* obj, QEvent *ev) override;
 
     void init();
     void setInitGame();

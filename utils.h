@@ -1,6 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+
+#include <QPoint>
+
 struct coord
 {
     int x;
@@ -14,7 +17,7 @@ struct coord
     }
 };
 
-coord const direct[4] = {{1,0},{-1,0},{0,1},{0,-1}};
+QPoint const direct[4] = {QPoint(0,1),QPoint(1,0),QPoint(0,-1),QPoint(-1,0)};   // 0右 1下 2左 3上
 
 enum cellStatus{
     blank, block, snake_body, snake_head, apple

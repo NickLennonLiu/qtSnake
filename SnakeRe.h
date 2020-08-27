@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QList>
 #include <QPoint>
+#include "utils.h"
 class Snake : public QObject{
     Snake(QObject* parent = 0);
     ~Snake();
@@ -14,7 +15,7 @@ public:
     void init();
 
 signals:
-    void snakeMoved(QPoint);
+    void snakeMoved(QPoint,QPoint);
     void snakeRetracted(QPoint);
 
 public slots:

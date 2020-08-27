@@ -1,62 +1,45 @@
 #include "snake.h"
 
-Snake::Snake(coord bodycoord[],int len, QObject *parent,int dir)
-    : QObject(parent), direction(dir), length(len)
+Snake::Snake(QObject* parent)
+    : QObject(parent)
 {
-    for (int i = 0; i < len; i++)
-    {
-        body[i] = new SnakePart(bodycoord[i]);
-    }
-    for (int i = 0; i < len - 1; i++)
-    {
-        body[i]->setNext(body[i + 1]);
-    }
-    tail = body[0];
-    head = body[len-1];
+    //init();
 }
 
-coord Snake::move() {
-    SnakePart* newHead = new SnakePart(head->getPos() + direct[direction]);
-    head->setNext(newHead);
-    head = newHead;
-    return head->getPos();
+void Snake::setgrow(int grow) {m_grow = grow;}
+
+void Snake::init()
+{
+    body.clear();
+    body.append(QPoint(20,10));
+    body.append(QPoint(20,11));
+    m_dir = 0;
+    m_grow = 0;
+    qDebug() << "Generated snake";
+    emit snakeMoved(QPoint(20,10),QPoint(20,11));
+    dirChanged = 0;
 }
 
-coord Snake::retract() {
-    SnakePart* temp = tail;
-    coord re = temp->getPos();
-    tail = tail->nextPart();
-    delete temp;
-    return re;
+void Snake::retract()
+{
+    QPoint tail = body.front();
+    body.pop_front();
+    emit snakeRetracted(tail);
+}
+
+void Snake::move()
+{
+    QPoint head = body.back();
+    QPoint next = head + direct[m_dir];
+    body.push_back(next);
+    dirChanged = 0;
+    emit snakeMoved(head,next);
 }
 
 void Snake::chgDirection(int dir) {
-    direction = dir;
-}
-
-void Snake::setGrowStatus(int s) {
-    growStatus = s;
-}
-
-Snake::~Snake() {
-    SnakePart* cur = tail;
-    while(cur->nextPart()){
-        SnakePart* next = cur->nextPart();
-        delete cur;
-        cur = next;
+    if(((m_dir + dir)%2) && !dirChanged)
+    {
+        m_dir = dir;
+        dirChanged = 1;
     }
-}
-
-SnakePart::SnakePart()
-{
-}
-
-SnakePart::SnakePart(coord pos, SnakePart* next)
-    : pos(pos)
-    , next(next)
-{
-}
-
-void SnakePart::setNext(SnakePart* nex) {
-    next = nex;
 }

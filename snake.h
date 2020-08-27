@@ -2,53 +2,36 @@
 #define SNAKE_H
 
 #include <QObject>
+#include <QList>
+#include <QPoint>
 #include "utils.h"
-
-
-class SnakePart {
-public:
-    SnakePart();
-    SnakePart(coord pos, SnakePart* next = 0);
-
-    //int getX() const {return pos.x;}
-    //int getY() const {return pos.y;}
-    coord getPos() const {return pos;}
-
-    SnakePart* nextPart() const {return next;}
-
-    void setNext(SnakePart* next);
-
-private:
-    coord pos;
-    SnakePart* next;
-};
-
+#include <QDebug>
 
 class Snake : public QObject{
-
     Q_OBJECT
-
 public:
-    explicit Snake(coord bodycoord[],int len,QObject *parent = nullptr,int dir = 0);
-    ~Snake();
-    int getGrowStatus() const {return growStatus;}
+    int len() const {return body.length();}
+    int dir() const {return m_dir;}
+    int grow() const {return m_grow;}
+    void setgrow(int);
+
+    Snake(QObject* parent = 0);
 
 signals:
-    void snakeMoved(coord);
-    void snakeRetracted(coord);
+    void snakeMoved(QPoint,QPoint);
+    void snakeRetracted(QPoint);
 
 public slots:
-    coord retract();
-    coord move();
+    void retract();
+    void move();
     void chgDirection(int);
-    void setGrowStatus(int);
+    void init();
 
 private:
-
-    SnakePart *body[1601], *tail, *head;
-    int direction;
-    int length;
-    int growStatus;
+    QList<QPoint> body;
+    int m_dir;
+    int m_grow;
+    bool dirChanged;
 };
 
 #endif // SNAKE_H
