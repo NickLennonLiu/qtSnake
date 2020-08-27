@@ -36,10 +36,24 @@ void Snake::move()
     emit snakeMoved(head,next);
 }
 
-void Snake::chgDirection(int dir) {
+void Snake::chgDirection(int dir,bool forced) {
+    if(forced){
+        m_dir = dir;
+        return;
+    }
     if(((m_dir + dir)%2) && !dirChanged)
     {
         m_dir = dir;
         dirChanged = 1;
     }
+}
+
+void Snake::clear()
+{
+    body.clear();
+}
+
+void Snake::appendBody(QPoint part)
+{
+    body.append(part);
 }

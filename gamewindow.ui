@@ -34,6 +34,10 @@
   <property name="windowTitle">
    <string>GameWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/game/icons/snakeicon.png</normaloff>:/game/icons/snakeicon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="focusPolicy">
     <enum>Qt::NoFocus</enum>
@@ -69,6 +73,14 @@
             <width>16777215</width>
             <height>30</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Cascadia Mono SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="text">
            <string>Step</string>
@@ -120,6 +132,14 @@
             <width>16777215</width>
             <height>30</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Cascadia Code SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="text">
            <string>Apple</string>
@@ -183,6 +203,15 @@
             <width>400</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <italic>true</italic>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="text">
            <string>TextLabel</string>
@@ -269,8 +298,13 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionStart"/>
+   <addaction name="blank1"/>
    <addaction name="actionPause"/>
    <addaction name="actionContinue"/>
+   <addaction name="blank1_3"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionLoad"/>
+   <addaction name="blank1_5"/>
    <addaction name="actionRestart"/>
    <addaction name="actionExit"/>
   </widget>
@@ -359,6 +393,10 @@
    </property>
   </action>
   <action name="actionView_Help">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/game/icons/help.png</normaloff>:/game/icons/help.png</iconset>
+   </property>
    <property name="text">
     <string>查看帮助</string>
    </property>
@@ -367,8 +405,27 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/game/icons/about.png</normaloff>:/game/icons/about.png</iconset>
+   </property>
    <property name="text">
     <string>关于本游戏</string>
+   </property>
+  </action>
+  <action name="blank1">
+   <property name="text">
+    <string> </string>
+   </property>
+  </action>
+  <action name="blank1_3">
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="blank1_5">
+   <property name="text">
+    <string/>
    </property>
   </action>
  </widget>

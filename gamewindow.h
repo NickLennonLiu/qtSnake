@@ -7,6 +7,10 @@
 #include "board.h"
 #include "snake.h"
 #include <QFileDialog>
+#include <QFile>
+#include <QMessageBox>
+#include "about.h"
+#include "help.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -33,7 +37,12 @@ public slots:
     void snakeGrow();
 
     void saveGame();
-    //void loadGame();
+    void loadGame();
+
+    void viewHelp();
+    void viewAbout();
+
+    void chgSpeed(float);
 
 signals:
     void actionTriggered(int);

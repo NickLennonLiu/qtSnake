@@ -31,8 +31,10 @@ void GameWindow::init(){
     connect(ui->actionContinue,&QAction::triggered,[=](){ emit actionTriggered(1);playStart();});
     connect(ui->actionRestart,&QAction::triggered,[=](){ emit actionTriggered(0);playRestart();});
     connect(ui->actionSave,&QAction::triggered,[=](){ emit actionTriggered(2);saveGame();});
-    connect(ui->actionLoad,&QAction::triggered,[=](){ emit actionTriggered(2);/*loadGame();*/});
+    connect(ui->actionLoad,&QAction::triggered,[=](){ emit actionTriggered(2);loadGame();});
     connect(this,&GameWindow::actionTriggered,this,&GameWindow::gameStatusChange);
+    connect(ui->actionView_Help,&QAction::triggered,[=](){ viewHelp();});
+    connect(ui->actionAbout,&QAction::triggered,[=](){ viewAbout();});
     gameStatusChange(0);
 
     int width = 800;
@@ -100,6 +102,12 @@ void GameWindow::playEnd()
     qDebug() << "HIT! game ended";
     playTimer->stop();
     emit actionTriggered(3);
+    QMessageBox* endGame = new QMessageBox(QMessageBox::Icon(0),tr("GameOver!"),tr("Game over! Try Again?"),QMessageBox::Yes|QMessageBox::No,this);
+    if(endGame->exec() == QMessageBox::Yes){
+        actionTriggered(0);
+        playRestart();
+    }
+
 }
 
 void GameWindow::snakeGrow()
@@ -110,7 +118,78 @@ void GameWindow::snakeGrow()
 }
 
 void GameWindow::saveGame(){
-    QString filename = QFileDialog::getSaveFileName(this,tr("保存"));
+    QString filename = QFileDialog::getSaveFileName(this,tr("保存"),"","save (*.save)");
+    QFile saveFile(filename);
+    if(!saveFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+        qDebug() << "open file failed!";
+    } else {
+        qDebug() << "open file success!";
+    }
+    QTextStream output(&saveFile);
+
+    output << ui->timeLCD->value() << " "
+           << ui->appleLCD->value() << endl << endl;
+
+    for(int i = 0;i<40 ;i++){
+        for(int j = 0;j < 40;j++){
+            output << gameboard->getCell(i,j)->getStatus() << " ";
+
+        }
+        output << endl;
+    }
+    output << endl;
+    QList<QPoint> snakebody = snake->getSnake();
+
+    output << snake->len() << endl;
+    for(auto i : snakebody){
+        output << i.x() << " " << i.y() << endl;
+    }
+    output << endl;
+    output << snake->grow()
+           << " " << snake->dir() << endl;
+    saveFile.close();
+}
+
+void GameWindow::loadGame(){
+    gameboard->flush();
+    snake->clear();
+
+    QString filename = QFileDialog::getOpenFileName(this,tr("载入存档"),"",tr("save (*.save)"));
+    QFile saveFile(filename);
+    if(!saveFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug() << "open file failed!";
+    } else {
+        qDebug() << "open file success!";
+    }
+    QTextStream input(&saveFile);
+
+    int step,apple;
+    input >> step >> apple;
+    ui->timeLCD->display(step);
+    ui->appleLCD->display(apple);
+
+    int status;
+    for(int i = 0;i<40 ;i++){
+        for(int j = 0;j < 40;j++){
+            input >> status;
+            gameboard->chgCellStatus(QPoint(i,j),status);
+        }
+    }
+
+    int len, x, y;
+    input >> len;
+    while(len--){
+        input >> x >> y;
+        snake->appendBody(QPoint(x,y));
+        qDebug() << "snake body appended:" << x << " " << y;
+    }
+
+    int grow, direction;
+    input >> grow >> direction;
+    snake->setgrow(grow);
+    snake->chgDirection(direction,true);
+
+    saveFile.close();
 }
 
 GameWindow::~GameWindow()
@@ -152,14 +231,20 @@ void GameWindow::gameStatusChange(int status){
 void GameWindow::keyPressEvent(QKeyEvent *ev)
 {
     qDebug() << "key pressed" << ev->key();
+    if(ev->key() == Qt::Key_Comma) chgSpeed(2);
+    if(ev->key() == Qt::Key_Period) chgSpeed(0.5);
     if(m_mainStatus!=1){
         QMainWindow::keyPressEvent(ev);
         return;
     }
     switch(ev->key()){
+    case Qt::Key_D:
     case Qt::Key_Right: emit direcInput(0);qDebug()<<"turn right";break;
+    case Qt::Key_A:
     case Qt::Key_Left: emit direcInput(2);qDebug()<<"turn left";break;
+    case Qt::Key_S:
     case Qt::Key_Down: emit direcInput(1);qDebug()<<"turn down";break;
+    case Qt::Key_W:
     case Qt::Key_Up: emit direcInput(3);qDebug()<<"turn up";break;
     default: QMainWindow::keyPressEvent(ev);
     }
@@ -168,4 +253,22 @@ void GameWindow::keyPressEvent(QKeyEvent *ev)
 bool GameWindow::eventFilter(QObject *watched, QEvent *event)
 {
     return false;
+}
+
+void GameWindow::viewHelp()
+{
+    Help* help = new Help(this);
+    help->exec();
+}
+
+void GameWindow::viewAbout()
+{
+    About* about = new About(this);
+    about->exec();
+}
+
+void GameWindow::chgSpeed(float delta){
+    int newInterval = (10>playTimer->interval() * delta)?10:playTimer->interval() * delta;
+    newInterval = (newInterval < 1500)?newInterval:1500;
+    playTimer->setInterval(newInterval);
 }

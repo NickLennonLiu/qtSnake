@@ -9,6 +9,7 @@ Cell::Cell(int s, QPoint pos, QWidget *parent)
     setMaximumSize(30,30);
     connect(this,SIGNAL(clicked()),this,SLOT(handleClick()));
     setFocusPolicy(Qt::NoFocus);
+    m_style = 0;
 }
 
 void Cell::handleClick()
@@ -22,6 +23,10 @@ void Cell::handleClick()
     }
 }
 
+void Cell::setBlankStyle(bool set){
+    m_style = set;
+}
+
 /*
 QSize Cell::sizeHint() const
 {
@@ -33,11 +38,16 @@ QSize Cell::sizeHint() const
 */
 
 void Cell::paintEvent(QPaintEvent *ev) {
+    /*
     QPainter p(this);
     p.setPen(Qt::darkGray);
     QColor color;
     switch (m_status) {
-    case blank: color = QColor(Qt::white);break;
+    case blank: {
+        color = QColor(Qt::white);
+        p.setPen(Qt::NoPen);
+        break;
+    }
     case block: color = QColor(Qt::darkGray);break;
     case snake_body: color = QColor(Qt::black);break;
     case snake_head: color = QColor(Qt::blue);break;
@@ -46,6 +56,61 @@ void Cell::paintEvent(QPaintEvent *ev) {
     p.setBrush(color);
     QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
     p.drawRect(rec);
+    */
+
+    QPainter p(this);
+    QColor grass(173,238,146,80), stone(114,118,114), snakebody(47,70,63), snakehead(0,128,0);
+    switch (m_status) {
+    case 0: // blank
+    {
+        if(!m_style){
+            p.setPen(Qt::darkGray);
+            p.setBrush(grass);
+            QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
+            p.drawRect(rec);
+        }else{
+            p.setPen(Qt::NoPen);
+            p.setBrush(grass);
+            p.drawRect(rect());
+        }
+        break;
+    }
+    case 1:     // block
+    {
+        p.setPen(Qt::darkGray);
+        p.setBrush(stone);
+        QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
+        p.drawRect(rec);
+        break;
+    }
+    case 2: //snake_body
+    {
+        p.setPen(Qt::darkGreen);
+        p.setBrush(snakebody);
+        QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
+        p.drawRect(rec);
+        break;
+    }
+    case 3: // snake_head
+    {
+        p.setPen(Qt::green);
+        p.setBrush(snakehead);
+        QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
+        p.drawRect(rec);
+        break;
+    }
+    case 4: // apple
+    {
+        p.setPen(Qt::NoPen);
+        p.setBrush(grass);
+        p.drawRect(rect());
+        p.setPen(Qt::darkGray);
+        p.setBrush(Qt::red);
+        QRect rec(rect().x()+1,rect().y()+1,rect().width()-2,rect().height()-2);
+        p.drawEllipse(rec);
+        break;
+    }
+    }
 }
 
 void Cell::changeCellStatus(QPoint pos, int status)

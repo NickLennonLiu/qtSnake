@@ -20,11 +20,13 @@ signals:
 public slots:
     void changeCellStatus(QPoint,int);
     void handleClick();
+    void setBlankStyle(bool);
 
 private:
     void paintEvent(QPaintEvent *) override;
     cellStatus m_status;
     QPoint m_pos;
+    int m_style;
 
 };
 

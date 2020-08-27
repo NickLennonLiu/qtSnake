@@ -16,22 +16,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    about.cpp \
     board.cpp \
     cell.cpp \
+    help.cpp \
     main.cpp \
     gamewindow.cpp \
     snake.cpp
 
 
 HEADERS += \
+    about.h \
     board.h \
     cell.h \
     gamewindow.h \
+    help.h \
     snake.h \
     utils.h
 
 FORMS += \
-    gamewindow.ui
+    about.ui \
+    gamewindow.ui \
+    help.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

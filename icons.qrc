@@ -5,6 +5,9 @@
         <file>icons/resume.png</file>
         <file>icons/restart.png</file>
         <file>icons/exit.png</file>
+        <file>icons/about.png</file>
+        <file>icons/help.png</file>
+        <file>icons/snakeicon.png</file>
     </qresource>
     <qresource prefix="/save">
         <file>icons/loadfile.png</file>

@@ -7,12 +7,14 @@
 #include "cell.h"
 #include <QGridLayout>
 #include <QtMath>
+#include <QDebug>
 
 class board : public QWidget
 {
     Q_OBJECT
 public:
     explicit board(QWidget *parent = nullptr);
+    Cell* getCell(int i,int j) const {return cells[i][j];}
 
 signals:
     void chgCellStatus(QPoint,int);

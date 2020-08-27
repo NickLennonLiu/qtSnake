@@ -4,20 +4,10 @@
 
 #include <QPoint>
 
-struct coord
-{
-    int x;
-    int y;
-    coord operator+(coord const dir)
-    {
-        coord a;
-        a.x = x + dir.x;
-        a.y = y + dir.y;
-        return a;
-    }
-};
 
 QPoint const direct[4] = {QPoint(0,1),QPoint(1,0),QPoint(0,-1),QPoint(-1,0)};   // 0右 1下 2左 3上
+
+// 0右 1下 2左 3上
 
 enum cellStatus{
     blank, block, snake_body, snake_head, apple

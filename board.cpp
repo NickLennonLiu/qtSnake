@@ -19,6 +19,7 @@ void board::flush()
     for(int i = 0;i<40;i++){
         for(int j = 0;j<40;j++){
             cells[i][j]->changeCellStatus(QPoint(i,j),0);
+            cells[i][j]->setBlankStyle(0);
         }
     }
 }
@@ -28,14 +29,15 @@ void board::SnakeMoved(QPoint preH,QPoint tryH)
     int x = tryH.x(),y = tryH.y();
     if( x < 0 || x >=40 || y < 0 || y >= 40){
         emit hit();
+        qDebug() << "out of boundary!" << x << " " << y;
         return;
     }
     cellStatus cell = cells[x][y]->getStatus();
     switch(cell){
     case blank:{emit chgCellStatus(preH,2);emit chgCellStatus(tryH,3);break;}
-    case block:{emit hit();break;}
-    case snake_body:{emit hit();break;}
-    case snake_head:{emit hit();break;}
+    case block:{emit hit();qDebug()<<"hit block";break;}
+    case snake_body:{emit hit();qDebug()<<"hit body";break;}
+    case snake_head:{emit hit();qDebug()<<"hit head";break;}
     case apple:{emit chgCellStatus(preH,2);emit chgCellStatus(tryH,3);emit appleEaten();break;}
     }
 }
@@ -58,6 +60,7 @@ void board::setCellsDisable(bool dis)
     for(int i = 0;i<40;i++){
         for(int j = 0;j<40;j++){
             cells[i][j]->setDisabled(dis);
+            cells[i][j]->setBlankStyle(dis);
         }
     }
 }
