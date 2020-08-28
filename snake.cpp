@@ -4,6 +4,10 @@ Snake::Snake(QObject* parent)
     : QObject(parent)
 {
     //init();
+    re.setMedia(QUrl("qrc:/direction/sounds/re.wav"));
+    mi.setMedia(QUrl("qrc:/direction/sounds/mi.wav"));
+    sol.setMedia(QUrl("qrc:/direction/sounds/sol.wav"));
+    la.setMedia(QUrl("qrc:/direction/sounds/la.wav"));
 }
 
 void Snake::setgrow(int grow) {m_grow = grow;}
@@ -11,12 +15,12 @@ void Snake::setgrow(int grow) {m_grow = grow;}
 void Snake::init()
 {
     body.clear();
-    body.append(QPoint(20,10));
-    body.append(QPoint(20,11));
+    body.append(QPoint(SIZE/2,SIZE/2));
+    body.append(QPoint(SIZE/2,SIZE/2 + 1));
     m_dir = 0;
     m_grow = 0;
     qDebug() << "Generated snake";
-    emit snakeMoved(QPoint(20,10),QPoint(20,11));
+    emit snakeMoved(QPoint(SIZE/2,SIZE/2),QPoint(SIZE/2,SIZE/2 + 1));
     dirChanged = 0;
 }
 
@@ -44,8 +48,15 @@ void Snake::chgDirection(int dir,bool forced) {
     if(((m_dir + dir)%2) && !dirChanged)
     {
         m_dir = dir;
+        switch (dir) {
+        case 0:re.stop();re.play();break;
+        case 1:mi.stop();mi.play();break;
+        case 2:sol.stop();sol.play();break;
+        case 3:la.stop();la.play();break;
+        }
         dirChanged = 1;
     }
+
 }
 
 void Snake::clear()

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/direction">
+        <file>sounds/la.wav</file>
+        <file>sounds/mi.wav</file>
+        <file>sounds/re.wav</file>
+        <file>sounds/sol.wav</file>
+    </qresource>
+</RCC>

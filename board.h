@@ -32,7 +32,7 @@ public slots:
 private:
 
     QGridLayout *layout;
-    Cell *cells[40][40];
+    Cell *cells[SIZE][SIZE];
 };
 
 #endif // BOARD_H

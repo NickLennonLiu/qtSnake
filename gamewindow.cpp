@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QTimer>
 
-const int SIZE = 40;
 
 GameWindow::GameWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,10 +27,10 @@ GameWindow::GameWindow(QWidget *parent)
 void GameWindow::init(){
     connect(ui->actionStart,&QAction::triggered,[=](){ emit actionTriggered(1);playStart();});
     connect(ui->actionPause,&QAction::triggered,[=](){ emit actionTriggered(2);playPause();});
-    connect(ui->actionContinue,&QAction::triggered,[=](){ emit actionTriggered(1);playStart();});
+    connect(ui->actionContinue,&QAction::triggered,[=](){ emit actionTriggered(1);m_prepared = 1;playLaunch();});
     connect(ui->actionRestart,&QAction::triggered,[=](){ emit actionTriggered(0);playRestart();});
     connect(ui->actionSave,&QAction::triggered,[=](){ emit actionTriggered(2);saveGame();});
-    connect(ui->actionLoad,&QAction::triggered,[=](){ emit actionTriggered(2);loadGame();});
+    connect(ui->actionLoad,&QAction::triggered,[=](){ /*emit actionTriggered(2);*/loadGame();});
     connect(this,&GameWindow::actionTriggered,this,&GameWindow::gameStatusChange);
     connect(ui->actionView_Help,&QAction::triggered,[=](){ viewHelp();});
     connect(ui->actionAbout,&QAction::triggered,[=](){ viewAbout();});
@@ -68,11 +67,21 @@ void GameWindow::setInitGame(){
     gameboard->flush();
     gameboard->genApple();
     snake->init();
+    m_prepared = 0;
 }
 
 void GameWindow::playStart(){
-    playTimer->start();
+    //playTimer->start();
     gameboard->setCellsDisable(true);
+    m_prepared = 1;
+}
+
+void GameWindow::playLaunch(){
+    if(m_prepared){
+        playTimer->start();
+        ui->statusHint->setText("Good Luck!");
+        m_prepared = 0;
+    }
 }
 
 void GameWindow::playStep()
@@ -130,8 +139,8 @@ void GameWindow::saveGame(){
     output << ui->timeLCD->value() << " "
            << ui->appleLCD->value() << endl << endl;
 
-    for(int i = 0;i<40 ;i++){
-        for(int j = 0;j < 40;j++){
+    for(int i = 0;i<SIZE ;i++){
+        for(int j = 0;j < SIZE;j++){
             output << gameboard->getCell(i,j)->getStatus() << " ";
 
         }
@@ -151,17 +160,20 @@ void GameWindow::saveGame(){
 }
 
 void GameWindow::loadGame(){
-    gameboard->flush();
-    snake->clear();
+
 
     QString filename = QFileDialog::getOpenFileName(this,tr("载入存档"),"",tr("save (*.save)"));
     QFile saveFile(filename);
     if(!saveFile.open(QIODevice::ReadOnly | QIODevice::Text)){
         qDebug() << "open file failed!";
+        return;
     } else {
         qDebug() << "open file success!";
     }
     QTextStream input(&saveFile);
+
+    gameboard->flush();
+    snake->clear();
 
     int step,apple;
     input >> step >> apple;
@@ -169,8 +181,8 @@ void GameWindow::loadGame(){
     ui->appleLCD->display(apple);
 
     int status;
-    for(int i = 0;i<40 ;i++){
-        for(int j = 0;j < 40;j++){
+    for(int i = 0;i<SIZE ;i++){
+        for(int j = 0;j < SIZE;j++){
             input >> status;
             gameboard->chgCellStatus(QPoint(i,j),status);
         }
@@ -190,6 +202,7 @@ void GameWindow::loadGame(){
     snake->chgDirection(direction,true);
 
     saveFile.close();
+    emit actionTriggered(2);
 }
 
 GameWindow::~GameWindow()
@@ -213,7 +226,7 @@ void GameWindow::gameStatusChange(int status){
         break;
     }
     case 1: {   // 游戏状态
-        ui->statusHint->setText("Good Luck!");
+        ui->statusHint->setText("Choose a direction to launch!");
         break;
     }
     case 2:{    // 暂停状态
@@ -231,21 +244,21 @@ void GameWindow::gameStatusChange(int status){
 void GameWindow::keyPressEvent(QKeyEvent *ev)
 {
     qDebug() << "key pressed" << ev->key();
-    if(ev->key() == Qt::Key_Comma) chgSpeed(2);
-    if(ev->key() == Qt::Key_Period) chgSpeed(0.5);
+    if(ev->key() == Qt::Key_Comma) chgSpeed(1.2);
+    if(ev->key() == Qt::Key_Period) chgSpeed(0.8);
     if(m_mainStatus!=1){
         QMainWindow::keyPressEvent(ev);
         return;
     }
     switch(ev->key()){
     case Qt::Key_D:
-    case Qt::Key_Right: emit direcInput(0);qDebug()<<"turn right";break;
+    case Qt::Key_Right: emit direcInput(0);emit playLaunch();qDebug()<<"turn right";break;
     case Qt::Key_A:
-    case Qt::Key_Left: emit direcInput(2);qDebug()<<"turn left";break;
+    case Qt::Key_Left: emit direcInput(2);emit playLaunch();qDebug()<<"turn left";break;
     case Qt::Key_S:
-    case Qt::Key_Down: emit direcInput(1);qDebug()<<"turn down";break;
+    case Qt::Key_Down: emit direcInput(1);emit playLaunch();qDebug()<<"turn down";break;
     case Qt::Key_W:
-    case Qt::Key_Up: emit direcInput(3);qDebug()<<"turn up";break;
+    case Qt::Key_Up: emit direcInput(3);emit playLaunch();qDebug()<<"turn up";break;
     default: QMainWindow::keyPressEvent(ev);
     }
 }

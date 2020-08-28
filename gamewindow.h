@@ -33,6 +33,7 @@ public slots:
     void playPause();
     void playRestart();
     void playEnd();
+    void playLaunch();
 
     void snakeGrow();
 
@@ -63,6 +64,7 @@ private:
     QTimer* playTimer;
     board* gameboard;
     Snake* snake;
+    int m_prepared;
 
 };
 #endif // GAMEWINDOW_H

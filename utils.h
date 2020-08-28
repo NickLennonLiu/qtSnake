@@ -4,6 +4,7 @@
 
 #include <QPoint>
 
+const int SIZE = 40;
 
 QPoint const direct[4] = {QPoint(0,1),QPoint(1,0),QPoint(0,-1),QPoint(-1,0)};   // 0右 1下 2左 3上
 

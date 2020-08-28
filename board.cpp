@@ -3,8 +3,8 @@
 board::board(QWidget *parent) : QWidget(parent)
 {
     layout = new QGridLayout(this);
-    for(int i = 0;i<40;i++){
-        for(int j = 0;j<40;j++){
+    for(int i = 0;i<SIZE;i++){
+        for(int j = 0;j<SIZE;j++){
             cells[i][j] = new Cell(0,QPoint(i,j));
             connect(this,SIGNAL(chgCellStatus(QPoint,int)),cells[i][j],SLOT(changeCellStatus(QPoint,int)));
             layout->addWidget(cells[i][j],i,j);
@@ -16,8 +16,8 @@ board::board(QWidget *parent) : QWidget(parent)
 
 void board::flush()
 {
-    for(int i = 0;i<40;i++){
-        for(int j = 0;j<40;j++){
+    for(int i = 0;i<SIZE;i++){
+        for(int j = 0;j<SIZE;j++){
             cells[i][j]->changeCellStatus(QPoint(i,j),0);
             cells[i][j]->setBlankStyle(0);
         }
@@ -27,7 +27,7 @@ void board::flush()
 void board::SnakeMoved(QPoint preH,QPoint tryH)
 {
     int x = tryH.x(),y = tryH.y();
-    if( x < 0 || x >=40 || y < 0 || y >= 40){
+    if( x < 0 || x >=SIZE || y < 0 || y >= SIZE){
         emit hit();
         qDebug() << "out of boundary!" << x << " " << y;
         return;
@@ -48,17 +48,17 @@ void board::SnakeRetracted(QPoint pos){
 
 void board::genApple(){
     qsrand(time(0));
-    int x = qrand()%40, y = qrand()%40;
+    int x = qrand()%SIZE, y = qrand()%SIZE;
     while(cells[x][y]->getStatus() != blank){
-        x = qrand()%40, y = qrand()%40;
+        x = qrand()%SIZE, y = qrand()%SIZE;
     }
     emit chgCellStatus(QPoint(x,y),4);
 }
 
 void board::setCellsDisable(bool dis)
 {
-    for(int i = 0;i<40;i++){
-        for(int j = 0;j<40;j++){
+    for(int i = 0;i<SIZE;i++){
+        for(int j = 0;j<SIZE;j++){
             cells[i][j]->setDisabled(dis);
             cells[i][j]->setBlankStyle(dis);
         }

@@ -6,6 +6,7 @@
 #include <QPoint>
 #include "utils.h"
 #include <QDebug>
+#include <QMediaPlayer>
 
 class Snake : public QObject{
     Q_OBJECT
@@ -36,6 +37,8 @@ private:
     int m_dir;
     int m_grow;
     bool dirChanged;
+    QMediaPlayer re,mi,sol,la;
+
 };
 
 #endif // SNAKE_H
