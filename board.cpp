@@ -11,7 +11,11 @@ board::board(QWidget *parent) : QWidget(parent)
         }
     }
     layout->setSpacing(0);
+
+    layout->setSizeConstraint(QLayout::SetMaximumSize);
+
     this->setLayout(layout);
+    //this->setStyleSheet("border:2px black solid");
 }
 
 void board::flush()

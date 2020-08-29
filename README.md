@@ -26,6 +26,12 @@
 
 ---
 
+<center><img src="pics\按钮栏.png" alt="按钮栏" style="zoom: 33%;" /></center>
+
+<center>按钮栏</center>
+
+---
+
 <center><img src="pics\帮助窗口.png" alt="帮助窗口" style="zoom:50%;" /><img src="pics\关于窗口.png" alt="关于窗口" style="zoom:67%;" /></center>
 
 <center>帮助窗口 与 关于窗口</center>

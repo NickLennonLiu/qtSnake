@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include "about.h"
 #include "help.h"
+#include <QSizePolicy>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }

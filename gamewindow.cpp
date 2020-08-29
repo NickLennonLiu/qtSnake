@@ -8,6 +8,7 @@
 #include <QTimer>
 
 
+
 GameWindow::GameWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GameWindow)
@@ -17,7 +18,9 @@ GameWindow::GameWindow(QWidget *parent)
     ui->setupUi(this);
     setFocusPolicy(Qt::StrongFocus);
     setWindowTitle("Snake");
-    setFixedSize(QSize(820,870));
+    ui->timeLCD->setMinimumWidth(80);
+    ui->appleLCD->setMinimumWidth(80);
+    //setFixedSize(QSize(820,870));
     //ui->statusHint->setStyleSheet("border:none");
 
     init();
@@ -26,17 +29,31 @@ GameWindow::GameWindow(QWidget *parent)
 
 void GameWindow::init(){
     connect(ui->actionStart,&QAction::triggered,[=](){ emit actionTriggered(1);playStart();});
+    connect(ui->Start,&QPushButton::clicked,[=](){ emit actionTriggered(1);playStart();});
+
     connect(ui->actionPause,&QAction::triggered,[=](){ emit actionTriggered(2);playPause();});
+    connect(ui->Pause,&QPushButton::clicked,[=](){ emit actionTriggered(2);playPause();});
+
     connect(ui->actionContinue,&QAction::triggered,[=](){ emit actionTriggered(1);m_prepared = 1;playLaunch();});
+    connect(ui->Continue,&QPushButton::clicked,[=](){ emit actionTriggered(1);m_prepared = 1;playLaunch();});
+
     connect(ui->actionRestart,&QAction::triggered,[=](){ emit actionTriggered(0);playRestart();});
+    connect(ui->Restart,&QPushButton::clicked,[=](){ emit actionTriggered(0);playRestart();});
+
     connect(ui->actionSave,&QAction::triggered,[=](){ emit actionTriggered(2);saveGame();});
+    connect(ui->Save,&QPushButton::clicked,[=](){ emit actionTriggered(2);saveGame();});
+
     connect(ui->actionLoad,&QAction::triggered,[=](){ /*emit actionTriggered(2);*/loadGame();});
+    connect(ui->Load,&QPushButton::clicked,[=](){ /*emit actionTriggered(2);*/loadGame();});
+
+
     connect(this,&GameWindow::actionTriggered,this,&GameWindow::gameStatusChange);
+
     connect(ui->actionView_Help,&QAction::triggered,[=](){ viewHelp();});
     connect(ui->actionAbout,&QAction::triggered,[=](){ viewAbout();});
     gameStatusChange(0);
 
-    int width = 800;
+    int width = SIZE*20;
     gameboard = new board();
     ui->verticalLayout->addWidget(gameboard);
     gameboard->setGeometry(10,10,width,width);
@@ -65,7 +82,7 @@ void GameWindow::setInitGame(){
     ui->timeLCD->display(0);
     ui->appleLCD->display(0);
     gameboard->flush();
-    gameboard->genApple();
+    //gameboard->genApple();
     snake->init();
     m_prepared = 0;
 }
@@ -74,6 +91,7 @@ void GameWindow::playStart(){
     //playTimer->start();
     gameboard->setCellsDisable(true);
     m_prepared = 1;
+    gameboard->genApple();
 }
 
 void GameWindow::playLaunch(){
@@ -202,6 +220,7 @@ void GameWindow::loadGame(){
     snake->chgDirection(direction,true);
 
     saveFile.close();
+    gameboard->setCellsDisable(true);
     emit actionTriggered(2);
 }
 
@@ -218,6 +237,12 @@ void GameWindow::gameStatusChange(int status){
     ui->actionRestart->setDisabled(status_map[status][3]);
     ui->actionSave->setDisabled(status_map[status][4]);
     ui->actionLoad->setDisabled(status_map[status][5]);
+    ui->Start->setDisabled(status_map[status][0]);
+    ui->Pause->setDisabled(status_map[status][1]);
+    ui->Continue->setDisabled(status_map[status][2]);
+    ui->Restart->setDisabled(status_map[status][3]);
+    ui->Save->setDisabled(status_map[status][4]);
+    ui->Load->setDisabled(status_map[status][5]);
     m_mainStatus = status;
     qDebug()<<"game status changed:" << m_mainStatus;
     switch(status){

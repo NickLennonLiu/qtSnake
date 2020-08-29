@@ -6,7 +6,7 @@ Cell::Cell(int s, QPoint pos, QWidget *parent)
       m_pos(pos)
 {
     setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
-    setMaximumSize(30,30);
+    setMaximumSize(20,20);
     connect(this,SIGNAL(clicked()),this,SLOT(handleClick()));
     setFocusPolicy(Qt::NoFocus);
     m_style = 0;
